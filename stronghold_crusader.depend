@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1612109350 source:d:\project\data structure\stronghold_crusader\main.cpp
+1612116980 source:d:\project\data structure\stronghold_crusader\main.cpp
 	<iostream>
 	"Map.h"
 	"Soldier.h"
 	"Castle.h"
 	"FibonacciHeap.h"
+	"AVLTree.h"
 
 1612098849 d:\project\data structure\stronghold_crusader\map.h
 	"Castle.h"
@@ -24,11 +25,12 @@
 
 1612098325 d:\project\data structure\stronghold_crusader\queue.h
 
-1612097251 d:\project\data structure\stronghold_crusader\avltree.h
+1612117078 d:\project\data structure\stronghold_crusader\avltree.h
 	<iostream>
+	"Soldier.h"
 
-1612104062 d:\project\data structure\stronghold_crusader\soldier.h
+1612115773 d:\project\data structure\stronghold_crusader\soldier.h
 
-1612109615 d:\project\data structure\stronghold_crusader\fibonacciheap.h
+1612113383 d:\project\data structure\stronghold_crusader\fibonacciheap.h
 	<cmath>
 

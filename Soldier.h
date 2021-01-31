@@ -12,6 +12,14 @@ public:
         this->castleNum = _castleNum;
     };
 
+    int getStrength() const {
+        return this->strength;
+    }
+
+    int getCastleNum() const {
+        return this->castleNum;
+    }
+
     static void setSoldiersSpeed(int _speed) {
         soldiersSpeed = _speed;
     }

@@ -3,7 +3,7 @@
 
 struct FibHeapNode
 {
-	int key; // assume the element is int...
+	int key;
 	FibHeapNode* left;
 	FibHeapNode* right;
 	FibHeapNode* parent;
@@ -18,7 +18,7 @@ public:
 	FibHeapNode* m_minNode;
 	int m_numOfNodes;
 
-	FibHeap(){  // initialize a new and empty Fib Heap
+	FibHeap() {
 		m_minNode = nullptr;
 		m_numOfNodes = 0;
 	}
@@ -26,9 +26,6 @@ public:
 	~FibHeap() {
 		_clear(m_minNode);
 	}
-
-	/* Insert a node with key value new_key
-	   and return the inserted node*/
 
     FibHeapNode* insert(int newKey) {
         FibHeapNode* newNode = _create_node(newKey);
@@ -39,7 +36,7 @@ public:
     void merge(FibHeap &another) {
         m_minNode = _merge(m_minNode, another.m_minNode);
         m_numOfNodes += another.m_numOfNodes;
-        another.m_minNode = nullptr; // so that another
+        another.m_minNode = nullptr;
         another.m_numOfNodes = 0;
     }
 
@@ -79,30 +76,21 @@ private:
         m_numOfNodes++;
     }
 
-
-    /*******************************************************************
-    * Remove x from its circular list
-    * Without changing the content of x
-    * Without freeing x's memory space
-    *******************************************************************/
     void _remove_from_circular_list(FibHeapNode* x) {
-        if (x->right == x) // the root list only has one node before the operation
-        {
+        if (x->right == x)
             return;
-        }
         FibHeapNode* leftSib = x->left;
         FibHeapNode* rightSib = x->right;
         leftSib->right = rightSib;
         rightSib->left = leftSib;
     }
 
-
     FibHeapNode* _merge(FibHeapNode* a, FibHeapNode* b) {
         if(a == nullptr)
             return b;
         if(b == nullptr)
             return a;
-        if( a->key > b->key ) // swap node
+        if( a->key > b->key )
         {
             FibHeapNode* temp = a;
             a = b;
@@ -117,24 +105,16 @@ private:
         return a;
     }
 
-
-    /***********************************************************
-     * Rearrange the heap
-     * Update the m_minNode
-     * Return the current minimum node
-    ***********************************************************/
     FibHeapNode* _extract_min_node() {
         FibHeapNode* min = m_minNode;
-        if ( min != nullptr) // the heap is not empty
-        {
+        if ( min != nullptr) {
             _unparent_all(min->child);
-            _merge(min, min->child); // merge the child circular list into root
+            _merge(min, min->child);
             _remove_from_circular_list(min);
-            if ( min == min->right) // the heap will be empty after the operation
+            if ( min == min->right)
                 m_minNode = nullptr;
-            else
-            {
-                m_minNode = min->right; // minNode need not be the minimum at this time
+            else {
+                m_minNode = min->right;
                 _consolidate();
             }
             m_numOfNodes--;
@@ -142,7 +122,6 @@ private:
         return min;
     }
 
-    /*make all nodes' parent nullptr in a circular list*/
     void _unparent_all(FibHeapNode* x) {
         if(x == nullptr)
             return;
@@ -155,39 +134,34 @@ private:
 
 
     void _consolidate() {
-        int Dn = (int)( log2(m_numOfNodes) / log2(1.618) ) ;
+        int Dn = (int)(log2(m_numOfNodes) / log2(1.618));
         FibHeapNode** A = new FibHeapNode*[Dn+1];
         for (int i = 0; i < Dn+1; i++)
             A[i] = nullptr;
         FibHeapNode* x = m_minNode;
         bool breakFlag = false;
-        while(true)
-        {
+        while(true) {
             int d = x->degree;
-            while( A[d] != nullptr)
-            {
+            while( A[d] != nullptr) {
                 FibHeapNode* y = A[d];
-                if (y == x)
-                {
-                    breakFlag = true;  // when y == x, all root nodes have different degree
-                    break;			   // so break out of the whole loop
+                if (y == x) {
+                    breakFlag = true;
+                    break;
                 }
-                if ( x->key > y->key ) // swap x and y, so x always points to the
-                                    // node with smaller key
-                {
+                if ( x->key > y->key ) {
                     FibHeapNode* temp = x;
                     x = y;
                     y = temp;
                 }
-                _make_child(y, x); // make y the child of x
-                A[d++] = nullptr; // now the new node has (d + 1) child, so A[d] = nullptr,d = d + 1
+                _make_child(y, x);
+                A[d++] = nullptr;
             }
             if (breakFlag)
                 break;
             A[x->degree] = x;
-            x = x->right; // to next node in the root list
+            x = x->right;
         }
-        m_minNode = x;  // update the m_minNode
+        m_minNode = x;
         FibHeapNode* iter = x;
         do {
             if ( iter->key < m_minNode->key )
@@ -201,7 +175,7 @@ private:
         _remove_from_circular_list(child);
         child->left = child->right = child;
         child->parent = parent;
-        parent->child = _merge(parent->child, child); // add child into parent's children list
+        parent->child = _merge(parent->child, child);
         parent->degree++;
         child->mark = false;
     }
@@ -217,12 +191,6 @@ private:
             m_minNode = x;
     }
 
-
-    /***********************************************************************
-    * Remove x from the child list of y, decrement y->degree
-    * Add x to the root list, make its parent NULL
-    * And clear the mark of x
-    ***********************************************************************/
     void _cut(FibHeapNode* x, FibHeapNode* y) {
         _remove_from_circular_list(x);
         if (x->right == x)
@@ -235,10 +203,6 @@ private:
         x->mark = false;
     }
 
-    /***********************************************************************
-    * Continue cutting on the path from the decreased node to the root
-        Until meet one node, which is a root or is unmarked
-    ***********************************************************************/
     void _cascading_cut(FibHeapNode* y) {
         FibHeapNode* z = y->parent;
         if ( z != nullptr) {
@@ -251,12 +215,6 @@ private:
         }
     }
 
-
-    /*********************************************************************
-    * t1 is used to traversal the circular list.
-      When t1 == x for the second time (the first time is at t1's initialization),
-      t1 has completed the traversal.
-    **********************************************************************/
     void _clear(FibHeapNode* x) {
         if ( x != nullptr )
         {

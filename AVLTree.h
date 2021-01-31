@@ -1,5 +1,6 @@
 #pragma once
 #include<iostream>
+#include "Soldier.h"
 
 using namespace std;
 
@@ -7,14 +8,18 @@ class BST;
 
 class Node {
     friend class BST;
-    int data;
+    Soldier* soldier;
     Node* left;
     Node* right;
     int height;
+public:
+    Node() {};
+    ~Node() {
+        delete soldier;
+    };
 };
 
-class BST
-{
+class BST {
     Node* root;
 
     void makeEmpty(Node* t) {
@@ -25,32 +30,32 @@ class BST
         delete t;
     }
 
-    Node* insert(int x, Node* t) {
+    Node* insert(Soldier* x, Node* t) {
         if(t == NULL) {
             t = new Node();
-            t -> data = x;
+            t -> soldier = new Soldier(x->getStrength(), x->getCastleNum());
             t -> height = 0;
             t -> left = t -> right = NULL;
         }
-        else if(x < t -> data) {
+        else if(x->getStrength() < t -> soldier->getStrength()) {
             t->left = insert(x, t->left);
             if(height(t->left) - height(t->right) == 2) {
-                if(x < t->left->data)
+                if(x->getStrength() < t -> left->soldier->getStrength())
                     t = singleRightRotate(t);
                 else
                     t = doubleRightRotate(t);
             }
         }
-        else if(x >= t->data) {
+        else if(x->getStrength() >= t -> soldier->getStrength()) {
             t->right = insert(x, t->right);
             if(height(t->right) - height(t->left) == 2) {
-                if(x > t->right->data)
+                if(x->getStrength() > t ->right->soldier->getStrength())
                     t = singleLeftRotate(t);
                 else
                     t = doubleLeftRotate(t);
             }
         }
-        else if(x == t->data) return t;
+        else if(x->getStrength() == t -> soldier->getStrength()) return t;
         t->height = max(height(t->left), height(t->right))+1;
         return t;
     }
@@ -101,18 +106,18 @@ class BST
             return findMax(t->right);
     }
 
-    Node* remove(int x, Node* t) {
+    Node* remove(Soldier* x, Node* t) {
         Node* temp;
         if(t == NULL)
             return NULL;
-        else if(x < t->data)
+        else if(x->getStrength() < t -> soldier->getStrength())
             t->left = remove(x, t->left);
-        else if(x > t->data)
+        else if(x->getStrength() > t -> soldier->getStrength())
             t->right = remove(x, t->right);
         else if(t->left && t->right) {
             temp = findMin(t->right);
-            t->data = temp->data;
-            t->right = remove(t->data, t->right);
+            t->soldier = temp->soldier;
+            t->right = remove(t->soldier, t->right);
         }
         else {
             temp = t;
@@ -155,7 +160,7 @@ class BST
         if(t == NULL)
             return;
         inorder(t->left);
-        cout << t->data << " ";
+        cout << t->soldier->getStrength() << " ";
         inorder(t->right);
     }
 
@@ -165,11 +170,11 @@ public:
         root = NULL;
     }
 
-    void insert(int x) {
+    void insert(Soldier* x) {
         root = insert(x, root);
     }
 
-    void remove(int x) {
+    void remove(Soldier* x) {
         root = remove(x, root);
     }
 
@@ -182,6 +187,18 @@ public:
 //int main()
 //{
 //    BST t;
+//    Soldier* a = new Soldier(5, 3)
+//    Soldier* b = new Soldier(7, 3)
+//    Soldier* c = new Soldier(5, 2)
+//    Soldier* d = new Soldier(2, 3)
+//    Soldier* e = new Soldier(1, 3)
+//    Soldier* f = new Soldier(5, 1)
+//    Soldier* g = new Soldier(9, 3)
+//    Soldier* h = new Soldier(5, 1)
+//    Soldier* i = new Soldier(12, 1)
+//    Soldier* j = new Soldier(5, 1)
+//    Soldier* k = new Soldier(4, 3)
+//    Soldier* l = new Soldier(10, 3)
 //    t.insert(20);
 //    t.insert(25);
 //    t.insert(15);
