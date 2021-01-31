@@ -6,6 +6,7 @@ class Queue {
     int front;
     int rear;
     int capacity;
+    int distance;
 public:
     Queue() {
         capacity = 5;
@@ -98,5 +99,13 @@ public:
                 cout << queue[i] << " ";
         }
         cout << endl;
+    }
+
+    void setDistance(int _distance) {
+        this->distance = _distance;
+    }
+
+    int getDistance() const {
+        return this->distance;
     }
 };
