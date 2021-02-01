@@ -10,6 +10,10 @@ class Map {
 public:
     Map() {};
 
+    ~Map() {
+        delete[] castles;
+    }
+
     Map(int arr[][400], int _numberOfCastles) {
         this->numberOfCastles = _numberOfCastles;
         for(int i = 0; i < numberOfCastles; i++)
@@ -19,7 +23,11 @@ public:
             castles[i] = new Castle(arr[i], numberOfCastles, i);
     }
 
-    setSoldiers(int _soldiersStrength[], int _numberOfSoldiers, int index) {
+    void setSoldiers(int _soldiersStrength[], int _numberOfSoldiers, int index) {
         this->castles[index]->setSoldiers(_soldiersStrength, _numberOfSoldiers);
+    }
+
+    void progress() {
+
     }
 };

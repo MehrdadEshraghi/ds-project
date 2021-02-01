@@ -1,226 +1,274 @@
-#pragma once
 #include<iostream>
+#include <algorithm>
 #include "Soldier.h"
+
+#define pow2(n) (1 << (n))
 
 using namespace std;
 
-class BST;
-
 class Node {
-    friend class BST;
+    friend class AVLTree;
+    int strength;
     Soldier* soldier;
-    Node* left;
-    Node* right;
-    int height;
+	Node *left;
+	Node *right;
 public:
-    Node() {};
     ~Node() {
         delete soldier;
-    };
+    }
 };
 
-class BST {
+class AVLTree {
     Node* root;
-
-    void makeEmpty(Node* t) {
-        if(this->root == NULL)
-            return;
-        makeEmpty(this->root->left);
-        makeEmpty(this->root->right);
-        delete t;
-    }
-
-    Node* insert(Soldier* x, Node* t) {
-        if(t == NULL) {
-            t = new Node();
-            t -> soldier = new Soldier(x->getStrength(), x->getCastleNum());
-            t -> height = 0;
-            t -> left = t -> right = NULL;
-        }
-        else if(x->getStrength() < t -> soldier->getStrength()) {
-            t->left = insert(x, t->left);
-            if(height(t->left) - height(t->right) == 2) {
-                if(x->getStrength() < t -> left->soldier->getStrength())
-                    t = singleRightRotate(t);
-                else
-                    t = doubleRightRotate(t);
-            }
-        }
-        else if(x->getStrength() >= t -> soldier->getStrength()) {
-            t->right = insert(x, t->right);
-            if(height(t->right) - height(t->left) == 2) {
-                if(x->getStrength() > t ->right->soldier->getStrength())
-                    t = singleLeftRotate(t);
-                else
-                    t = doubleLeftRotate(t);
-            }
-        }
-        else if(x->getStrength() == t -> soldier->getStrength()) return t;
-        t->height = max(height(t->left), height(t->right))+1;
-        return t;
-    }
-
-    Node* singleRightRotate(Node* &t) {
-        Node* u = t->left;
-        t->left = u->right;
-        u->right = t;
-        t->height = max(height(t->left), height(t->right))+1;
-        u->height = max(height(u->left), t->height)+1;
-        return u;
-    }
-
-    Node* singleLeftRotate(Node* &t) {
-        Node* u = t->right;
-        t->right = u->left;
-        u->left = t;
-        t->height = max(height(t->left), height(t->right))+1;
-        u->height = max(height(t->right), t->height)+1 ;
-        return u;
-    }
-
-    Node* doubleLeftRotate(Node* &t) {
-        t->right = singleRightRotate(t->right);
-        return singleLeftRotate(t);
-    }
-
-    Node* doubleRightRotate(Node* &t) {
-        t->left = singleLeftRotate(t->left);
-        return singleRightRotate(t);
-    }
-
-    Node* findMin(Node* t) {
-        if(t == NULL)
-            return NULL;
-        else if(t->left == NULL)
-            return t;
-        else
-            return findMin(t->left);
-    }
-
-    Node* findMax(Node* t) {
-        if(t == NULL)
-            return NULL;
-        else if(t->right == NULL)
-            return t;
-        else
-            return findMax(t->right);
-    }
-
-    Node* remove(Soldier* x, Node* t) {
-        Node* temp;
-        if(t == NULL)
-            return NULL;
-        else if(x->getStrength() < t -> soldier->getStrength())
-            t->left = remove(x, t->left);
-        else if(x->getStrength() > t -> soldier->getStrength())
-            t->right = remove(x, t->right);
-        else if(t->left && t->right) {
-            temp = findMin(t->right);
-            t->soldier = temp->soldier;
-            t->right = remove(t->soldier, t->right);
-        }
-        else {
-            temp = t;
-            if(t->left == NULL)
-                t = t->right;
-            else if(t->right == NULL)
-                t = t->left;
-            delete temp;
-        }
-        if(t == NULL)
-            return t;
-        t->height = max(height(t->left), height(t->right))+1;
-        if(height(t->left) - height(t->right) == 2) {
-            if(height(t->left->left) - height(t->left->right) == 1)
-                return singleLeftRotate(t);
-            else
-                return doubleLeftRotate(t);
-        }
-        else if(height(t->right) - height(t->left) == 2) {
-            if(height(t->right->right) - height(t->right->left) == 1)
-                return singleRightRotate(t);
-            else
-                return doubleRightRotate(t);
-        }
-        return t;
-    }
-
-    int height(Node* t) {
-        return (t == NULL ? -1 : t->height);
-    }
-
-    int getBalance(Node* t) {
-        if(t == NULL)
-            return 0;
-        else
-            return height(t->left) - height(t->right);
-    }
-
-    void inorder(Node* t) {
-        if(t == NULL)
-            return;
-        inorder(t->left);
-        cout << t->soldier->getStrength() << " ";
-        inorder(t->right);
-    }
-
 public:
-    BST()
-    {
-        root = NULL;
+    AVLTree() {
+		root = NULL;
+	}
+
+    int height(Node *temp) {
+        int h = 0;
+        if (temp != NULL) {
+            int l_height = height(temp->left);
+            int r_height = height(temp->right);
+            int maxHeight = max(l_height, r_height);
+            h = maxHeight + 1;
+        }
+        return h;
     }
 
-    void insert(Soldier* x) {
-        root = insert(x, root);
+    int diff(Node *temp) {
+        int l_height = height(temp->left);
+        int r_height = height(temp->right);
+        int b_factor = l_height - r_height;
+        return b_factor;
     }
 
-    void remove(Soldier* x) {
-        root = remove(x, root);
+    Node* doubleRightRotate(Node *parent) {
+        Node *temp;
+        temp = parent->right;
+        parent->right = temp->left;
+        temp->left = parent;
+        return temp;
+    }
+
+    Node* doubleLeftRotation(Node *parent) {
+        Node *temp;
+        temp = parent->left;
+        parent->left = temp->right;
+        temp->right = parent;
+        return temp;
+    }
+
+    Node* lr_rotation(Node *parent) {
+        Node *temp;
+        temp = parent->left;
+        parent->left = doubleRightRotate(temp);
+        return doubleLeftRotation(parent);
+    }
+
+    Node* rightLeftRotation(Node *parent) {
+        Node *temp;
+        temp = parent->right;
+        parent->right = doubleLeftRotation(temp);
+        return doubleRightRotate(parent);
+    }
+
+    Node* balance(Node *temp) {
+        int bal_factor = diff(temp);
+        if (bal_factor > 1) {
+            if (diff(temp->left) > 0)
+                temp = doubleLeftRotation(temp);
+            else
+                temp = lr_rotation(temp);
+        }
+        else if (bal_factor < -1) {
+            if (diff(temp->right) > 0)
+                temp = rightLeftRotation(temp);
+            else
+                temp = doubleRightRotate(temp);
+        }
+        return temp;
+    }
+
+    Node* _insert(Node *root, int strength, Soldier* _soldier) {
+        if (root == NULL) {
+            root = new Node;
+            root->soldier = _soldier;
+            root->strength = strength;
+            root->left = NULL;
+            root->right = NULL;
+            return root;
+        }
+        else if (strength < root->strength) {
+            root->left = _insert(root->left, strength, _soldier);
+            root = balance(root);
+        }
+        else if (strength >= root->strength) {
+            root->right = _insert(root->right, strength, _soldier);
+            root = balance(root);
+        }
+        return root;
+    }
+
+    void insert(Soldier* _soldier) {
+        this->root = _insert(this->root, _soldier->getStrength(), _soldier);
+    }
+
+    void _display(Node *ptr, int level) {
+        int i;
+        if (ptr != NULL) {
+            _display(ptr->right, level + 1);
+            printf("\n");
+            if (ptr == root)
+                cout << "Root -> ";
+            for (i = 0; i < level && ptr != root; i++)
+                cout << "        ";
+            cout << ptr->strength;
+            _display(ptr->left, level + 1);
+        }
     }
 
     void display() {
-        inorder(root);
-        cout << endl;
+        _display(this->root, 1);
+    }
+
+    void _inorder(Node *tree) {
+        if (tree == NULL)
+            return;
+        _inorder(tree->left);
+        cout << tree->strength << "  ";
+        _inorder(tree->right);
+    }
+
+    void inorder() {
+        _inorder(this->root);
+    }
+
+    void _preorder(Node *tree) {
+        if (tree == NULL)
+            return;
+        cout << tree->strength << "  ";
+        _preorder(tree->left);
+        _preorder(tree->right);
+
+    }
+
+    void preorder() {
+        _preorder(this->root);
+    }
+
+    Node* findMin(Node* t) {
+        if (t == NULL) return NULL;
+        else if (t->left == NULL) return t;
+        else return findMin(t->left);
+    }
+
+    Node*  findMax(Node* t) {
+        if (t == NULL) return NULL;
+        else if (t->right == NULL) return t;
+        else return findMax(t->right);
+    }
+
+    void _postorder(Node *tree) {
+        if (tree == NULL)
+            return;
+        _postorder(tree->left);
+        _postorder(tree->right);
+        cout << tree->strength << "  ";
+    }
+
+    void postorder() {
+        _postorder(this->root);
+    }
+
+    Node* _remove(Node* t, int x) {
+        Node* temp;
+        if (t == NULL) return NULL;
+        else if (x < t->strength) t->left = _remove(t->left, x);
+        else if (x >t->strength) t->right = _remove(t->right, x);
+        else if (t->left && t->right) {
+            temp = findMin(t->right);
+            t->strength = temp->strength;
+            t->right = _remove(t->right, t->strength);
+        }
+        else {
+            temp = t;
+            if (t->left == NULL) t = t->right;
+            else if (t->right == NULL) t = t->left;
+            delete temp;
+        }
+        if (t == NULL) return t;
+        t = balance(t);
+    }
+
+    void remove(int strength) {
+        this->root = _remove(this->root, strength);
+    }
+
+    bool isEmpty() {
+        if(!this->root) return true;
+        return false;
     }
 };
 
 //int main()
 //{
-//    BST t;
-//    Soldier* a = new Soldier(5, 3)
-//    Soldier* b = new Soldier(7, 3)
-//    Soldier* c = new Soldier(5, 2)
-//    Soldier* d = new Soldier(2, 3)
-//    Soldier* e = new Soldier(1, 3)
-//    Soldier* f = new Soldier(5, 1)
-//    Soldier* g = new Soldier(9, 3)
-//    Soldier* h = new Soldier(5, 1)
-//    Soldier* i = new Soldier(12, 1)
-//    Soldier* j = new Soldier(5, 1)
-//    Soldier* k = new Soldier(4, 3)
-//    Soldier* l = new Soldier(10, 3)
-//    t.insert(20);
-//    t.insert(25);
-//    t.insert(15);
-//    t.insert(10);
-//    t.insert(30);
-//    t.insert(5);
-//    t.insert(35);
-//    t.insert(67);
-//    t.insert(43);
-//    t.insert(21);
-//    t.insert(10);
-//    t.insert(89);
-//    t.insert(38);
-//    t.insert(69);
-//    t.display();
-//    t.remove(5);
-//    t.remove(35);
-//    t.remove(65);
-//    t.remove(89);
-//    t.remove(43);
-//    t.remove(88);
-//    t.remove(20);
-//    t.remove(38);
-//    t.display();
+//	int choice, item;
+//	AVLTree avl;
+//	while (1) {
+//		cout << "\n---------------------" << endl;
+//		cout << "AVL Tree Implementation" << endl;
+//		cout << "\n---------------------" << endl;
+//		cout << "1.Insert Element into the tree" << endl;
+//		cout << "2.Delete Element into the tree" << endl;
+//		cout << "3.Display Balanced AVL Tree" << endl;
+//		cout << "4.InOrder traversal" << endl;
+//		cout << "5.PreOrder traversal" << endl;
+//		cout << "6.PostOrder traversal" << endl;
+//		cout << "7.Exit" << endl;
+//		cout << "Enter your Choice: ";
+//		cin >> choice;
+//		switch (choice) {
+//		case 1:
+//			cout << "Enter strength to be inserted: ";
+//			cin >> item;
+//			avl.insert(item);
+//			break;
+//		case 2:
+//			cout << "Enter strength to be deleted: ";
+//			cin >> item;
+//			avl.remove(item);
+//			break;
+//		case 3:
+//			if (avl.isEmpty()) {
+//				cout << "Tree is Empty" << endl;
+//				continue;
+//			}
+//			cout << "Balanced AVL Tree:" << endl;
+//			avl.display();
+//			break;
+//		case 4:
+//			cout << "Inorder Traversal:" << endl;
+//			avl.inorder();
+//			cout << endl;
+//			break;
+//		case 5:
+//			cout << "Preorder Traversal:" << endl;
+//			avl.preorder();
+//			cout << endl;
+//			break;
+//		case 6:
+//			cout << "Postorder Traversal:" << endl;
+//			avl.postorder();
+//			cout << endl;
+//			break;
+//		case 7:
+//			exit(1);
+//			break;
+//		default:
+//			cout << "Wrong Choice" << endl;
+//		}
+//	}
+//	return 0;
 //}
+

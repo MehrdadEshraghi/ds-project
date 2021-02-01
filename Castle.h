@@ -3,15 +3,20 @@
 #include "AVLTree.h"
 #include "Queue.h"
 #include "Soldier.h"
+#include <cmath>
 
 class Castle {
     friend class Map;
     static int outputCapacityOfCastles;
     int numberOfSoldiers;
+    int numberOfSoldiersInTheCastle;
+    int inputCapacityOfCastle;
     int castleID;
+    AVLTree nationalGuard;
     int distances[400];
     Soldier* soldiersInTheCastle[400];
-    Queue<Soldier*> armies[400];
+    Queue<Queue<Soldier*>>* armies;
+    Stack<Soldier*> deathHall;
 public:
     Castle() {};
 
@@ -29,6 +34,16 @@ public:
 
     static void setOutputCapacityOfCastles(int _outputCapacityOfCastles) {
         outputCapacityOfCastles = _outputCapacityOfCastles;
+    }
+
+    int calcInputCapacityOfCastle() {
+        int temp;
+        for(int i = 0; i < armies->queueSize(); i++)
+            if(armies[i].getDistance() == 0)
+                temp += armies[i].queueSize();
+        int arrSize = sizeof(soldiersInTheCastle)/sizeof(soldiersInTheCastle[0]);
+        double cal = temp / arrSize;
+        this->inputCapacityOfCastle = ceil(cal);
     }
 };
 

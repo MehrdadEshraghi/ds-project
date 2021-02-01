@@ -8,6 +8,7 @@ class Stack {
     T* stack;
     int top;
     int capacity;
+    static float soldiersRecovery;
 public:
     Stack() {
         capacity = 5;
@@ -81,4 +82,11 @@ public:
             cout << stack[i] << " ";
         cout << endl;
     }
+
+    static void setSoldiersRecovery(float _soldiersRecovery) {
+        soldiersRecovery = _soldiersRecovery;
+    }
 };
+
+template<class T>
+float Stack<T>::soldiersRecovery = 0;
