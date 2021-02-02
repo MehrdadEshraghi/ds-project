@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -8,20 +9,24 @@ class Stack {
     T* stack;
     int top;
     int capacity;
+    int stackID;
     static float soldiersRecovery;
+    float recoveredSoldiers;
 public:
-    Stack() {
+    Stack(int _stackID) {
+        stackID = _stackID;
+        recoveredSoldiers = 0;
         capacity = 5;
         top = -1;
         stack = new T[capacity];
     }
 
-    Stack(int stackCapacity):capacity(stackCapacity) {
-        if(capacity < 1)
-            throw "stack capacity must be > 0";
-        stack = new T[capacity];
-        top = -1;
-    }
+//    Stack(int stackCapacity):capacity(stackCapacity) {
+//        if(capacity < 1)
+//            throw "stack capacity must be > 0";
+//        stack = new T[capacity];
+//        top = -1;
+//    }
 
     ~Stack() {
         delete[] stack;
@@ -85,6 +90,21 @@ public:
 
     static void setSoldiersRecovery(float _soldiersRecovery) {
         soldiersRecovery = _soldiersRecovery;
+    }
+
+    static float getSoldiersRecovery() {
+        return soldiersRecovery;
+    }
+
+    T updateRecoveredSoldiers(int _castleOwner) {
+        this->recoveredSoldiers += soldiersRecovery;
+        if(this->stackID != _castleOwner)
+            this->recoveredSoldiers = 0;
+        else if(recoveredSoldiers == ceilf(recoveredSoldiers) && recoveredSoldiers == floorf(recoveredSoldiers)) {
+            this->recoveredSoldiers = 0;
+            return this->pop();
+        }
+        return NULL;
     }
 };
 

@@ -28,6 +28,9 @@ public:
     }
 
     void progress() {
-
+        for(int i = 0; i < numberOfCastles; i++) {
+            castles[i]->updateDeathHall();
+            castles[i]->updateInputCapacityOfCastle();
+        }
     }
 };

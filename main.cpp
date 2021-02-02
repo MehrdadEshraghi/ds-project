@@ -25,8 +25,7 @@ int main()
     Soldier::setSoldiersSpeed(soldiersSpeed);
     cout << "Enter The Number Soldiers Which Will Be Recovered In Each Iteration:" << endl;
     cin >> soldiersRecovery;
-    Stack<int>::setSoldiersRecovery(soldiersRecovery);
-
+    Stack<Soldier>::setSoldiersRecovery(soldiersRecovery);
     for(int i = 0; i < numberOfCastles; i++) {
         cout << "Enter The Number Of Soldiers For Castle " << i << " My Lord:" << endl;
         cin >> numberOfSoldiers;
@@ -42,6 +41,7 @@ int main()
     while(1) {
         cout << "How Many Iterations Should The Game Progress:" << endl;
         cin >> iteration;
+        cout << endl;
         totalIterations += iteration;
         for(int i = 0; i < iteration; i++) {
             m.progress();

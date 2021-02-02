@@ -1,15 +1,16 @@
 # depslib dependency file v1.0
-1612209350 source:d:\project\data structure\stronghold_crusader\main.cpp
+1612218318 source:d:\project\data structure\stronghold_crusader\main.cpp
 	<iostream>
 	"Map.h"
 	"Soldier.h"
 	"Castle.h"
+	"Stack.h"
 
-1612118139 d:\project\data structure\stronghold_crusader\map.h
+1612223365 d:\project\data structure\stronghold_crusader\map.h
 	"Castle.h"
 	"Vector.h"
 
-1612208656 d:\project\data structure\stronghold_crusader\castle.h
+1612223365 d:\project\data structure\stronghold_crusader\castle.h
 	"Stack.h"
 	"AVLTree.h"
 	"Queue.h"
@@ -19,8 +20,9 @@
 1611410637 d:\project\data structure\stronghold_crusader\vector.h
 	<iostream>
 
-1611395218 d:\project\data structure\stronghold_crusader\stack.h
+1612222876 d:\project\data structure\stronghold_crusader\stack.h
 	<iostream>
+	<cmath>
 
 1612118139 d:\project\data structure\stronghold_crusader\queue.h
 
