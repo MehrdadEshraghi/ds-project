@@ -6,7 +6,7 @@ class Queue {
     int front;
     int rear;
     int capacity;
-    int distance;
+
 public:
     Queue() {
         capacity = 5;
@@ -14,14 +14,22 @@ public:
         queue = new T[capacity];
     }
 
-    Queue(int queueCapacity): capacity(queueCapacity) {
-        if(capacity < 1) throw "Queue capacity must be > 0";
-        queue = new T[capacity];
+    Queue(int _distance) {
+        capacity = 5;
         front = rear = 0;
+        queue = new T[capacity];
+        this->distance = _distance;
     }
 
+//    Queue(int queueCapacity): capacity(queueCapacity) {
+//        if(capacity < 1) throw "Queue capacity must be > 0";
+//        queue = new T[capacity];
+//        front = rear = 0;
+//    }
+
     ~Queue() {
-        delete[] queue;
+        cout << "salam" << endl;
+//        delete[] queue;
     }
 
     void enQueue(const T& item) {
@@ -45,9 +53,11 @@ public:
         queue[rear] = item;
     }
 
-    void deQueue() {
-        if(front == rear) throw "Queue is empty, cannot delete";
+    T& deQueue() {
+        if(front == rear) return NULL;;
+        int temp = front;
         front = (front + 1) % capacity;
+        return queue[temp];
     }
 
     int search(const T& item) {

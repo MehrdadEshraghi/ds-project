@@ -34,8 +34,10 @@
 		</Compiler>
 		<Unit filename="AVLTree.h" />
 		<Unit filename="Castle.h" />
+		<Unit filename="FibonacciHeap.h" />
 		<Unit filename="Map.h" />
 		<Unit filename="Queue.h" />
+		<Unit filename="Soldier.h" />
 		<Unit filename="Stack.h" />
 		<Unit filename="Vector.h" />
 		<Unit filename="main.cpp" />

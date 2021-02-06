@@ -1,29 +1,69 @@
 #include<iostream>
 #include <algorithm>
 #include "Soldier.h"
+#include "Vector.h"
 
 #define pow2(n) (1 << (n))
 
 using namespace std;
 
+
+
 class Node {
     friend class AVLTree;
     int strength;
+    Node* parent;
     Soldier* soldier;
 	Node *left;
 	Node *right;
-public:
-    ~Node() {
-        delete soldier;
-    }
+//public:
+//    ~Node() {
+//        delete soldier;
+//    }
+};
+
+struct RESULT{
+    Node*node;
+    int level;
 };
 
 class AVLTree {
     Node* root;
+    Node* deepest;
+    Vector<Soldier*> soldiers;
 public:
     AVLTree() {
 		root = NULL;
 	}
+
+	Soldier* pickSoldierToFight(int _strength) {
+	    updateSoldiers();
+	    Soldier* result;
+	    int low = INT_MAX;
+        for(int i = 0; i < soldiers.size(); i++) {
+            if(abs(soldiers[i]->getStrength() - _strength) < low) {
+                low = abs(soldiers[i]->getStrength() - _strength);
+                result = soldiers[i];
+            }
+        }
+        Soldier* l = new Soldier(result->getStrength(), result->getCastleNum(), result->getDistance());
+        this->remove(l->getStrength());
+        return l;
+	}
+
+    void updateSoldiers() {
+        _updateSoldiers(root);
+    }
+
+    void _updateSoldiers(Node* tree) {
+        if (tree == NULL)
+            return;
+        _updateSoldiers(tree->left);
+        soldiers.push_back(tree->soldier);
+        _updateSoldiers(tree->right);
+    }
+
+
 
     int height(Node *temp) {
         int h = 0;
@@ -59,7 +99,7 @@ public:
         return temp;
     }
 
-    Node* lr_rotation(Node *parent) {
+    Node* leftRightRotation(Node *parent) {
         Node *temp;
         temp = parent->left;
         parent->left = doubleRightRotate(temp);
@@ -79,7 +119,7 @@ public:
             if (diff(temp->left) > 0)
                 temp = doubleLeftRotation(temp);
             else
-                temp = lr_rotation(temp);
+                temp = leftRightRotation(temp);
         }
         else if (bal_factor < -1) {
             if (diff(temp->right) > 0)
@@ -90,28 +130,29 @@ public:
         return temp;
     }
 
-    Node* _insert(Node *root, int strength, Soldier* _soldier) {
+    Node* _insert(Node *root, int strength, Soldier* _soldier, Node* _parent) {
         if (root == NULL) {
             root = new Node;
             root->soldier = _soldier;
             root->strength = strength;
             root->left = NULL;
             root->right = NULL;
+            root->parent = _parent;
             return root;
         }
         else if (strength < root->strength) {
-            root->left = _insert(root->left, strength, _soldier);
+            root->left = _insert(root->left, strength, _soldier, root);
             root = balance(root);
         }
         else if (strength >= root->strength) {
-            root->right = _insert(root->right, strength, _soldier);
+            root->right = _insert(root->right, strength, _soldier, root);
             root = balance(root);
         }
         return root;
     }
 
     void insert(Soldier* _soldier) {
-        this->root = _insert(this->root, _soldier->getStrength(), _soldier);
+        this->root = _insert(this->root, _soldier->getStrength(), _soldier, NULL);
     }
 
     void _display(Node *ptr, int level) {
@@ -131,6 +172,7 @@ public:
     void display() {
         _display(this->root, 1);
     }
+
 
     void _inorder(Node *tree) {
         if (tree == NULL)
@@ -181,6 +223,46 @@ public:
         _postorder(this->root);
     }
 
+    Soldier* pullSoldier() {
+        if(root == NULL) {
+            return NULL;
+        }
+        this->deepest = getDeepest(root).node;
+        this->remove(deepest->soldier->getStrength());
+//        if(deepest == root) {
+            int a = this->deepest->soldier->getCastleNum();
+            int b = this->deepest->soldier->getDistance();
+            int c = this->deepest->soldier->getStrength();
+//            root = NULL;
+            return new Soldier(c, a, b);
+//        }
+//        if(deepest == deepest->parent->right)
+//            deepest->parent->right = NULL;
+//        else
+//            deepest->parent->left = NULL;
+//        return deepest->soldier;
+
+
+//        if(isLeavesEmpty()) return NULL;
+//        Node* s = this->leaves[leaves.size() - 1];
+//        cout << s->soldier->getStrength() << endl;
+//        if(s == root) {
+//            int a = this->root->soldier->getCastleNum();
+//            int b = this->root->soldier->getDistance();
+//            int c = this->root->soldier->getStrength();
+//            root = NULL;
+//            return new Soldier(c, a, b);
+//        }
+//        if(s->parent) {
+//            if(s == s->parent->right)
+//                s->parent->right = NULL;
+//            else
+//                s->parent->left = NULL;
+//        }
+//        this->leaves.pop_back();
+//        return s->soldier;
+    }
+
     Node* _remove(Node* t, int x) {
         Node* temp;
         if (t == NULL) return NULL;
@@ -209,66 +291,37 @@ public:
         if(!this->root) return true;
         return false;
     }
-};
 
-//int main()
-//{
-//	int choice, item;
-//	AVLTree avl;
-//	while (1) {
-//		cout << "\n---------------------" << endl;
-//		cout << "AVL Tree Implementation" << endl;
-//		cout << "\n---------------------" << endl;
-//		cout << "1.Insert Element into the tree" << endl;
-//		cout << "2.Delete Element into the tree" << endl;
-//		cout << "3.Display Balanced AVL Tree" << endl;
-//		cout << "4.InOrder traversal" << endl;
-//		cout << "5.PreOrder traversal" << endl;
-//		cout << "6.PostOrder traversal" << endl;
-//		cout << "7.Exit" << endl;
-//		cout << "Enter your Choice: ";
-//		cin >> choice;
-//		switch (choice) {
-//		case 1:
-//			cout << "Enter strength to be inserted: ";
-//			cin >> item;
-//			avl.insert(item);
-//			break;
-//		case 2:
-//			cout << "Enter strength to be deleted: ";
-//			cin >> item;
-//			avl.remove(item);
-//			break;
-//		case 3:
-//			if (avl.isEmpty()) {
-//				cout << "Tree is Empty" << endl;
-//				continue;
-//			}
-//			cout << "Balanced AVL Tree:" << endl;
-//			avl.display();
-//			break;
-//		case 4:
-//			cout << "Inorder Traversal:" << endl;
-//			avl.inorder();
-//			cout << endl;
-//			break;
-//		case 5:
-//			cout << "Preorder Traversal:" << endl;
-//			avl.preorder();
-//			cout << endl;
-//			break;
-//		case 6:
-//			cout << "Postorder Traversal:" << endl;
-//			avl.postorder();
-//			cout << endl;
-//			break;
-//		case 7:
-//			exit(1);
-//			break;
-//		default:
-//			cout << "Wrong Choice" << endl;
-//		}
-//	}
-//	return 0;
-//}
+    void find(Node *root, int level, int &maxLevel, Node* &res) {
+        if (root != NULL) {
+            find(root->left, ++level, maxLevel, res);
+            if (level > maxLevel) {
+                res = root;
+                maxLevel = level;
+            }
+            find(root->right, level, maxLevel, res);
+        }
+    }
+
+    Node* deepestNode(Node *root) {
+        Node* res = NULL;
+        int maxLevel = -1;
+        find(root, 0, maxLevel, res);
+        return res;
+    }
+
+    RESULT getDeepest( Node *root ){
+        if( root == NULL ){
+            RESULT result = {NULL, 0};
+            return result;
+        }
+        RESULT lResult = getDeepest( root->left );
+        RESULT rResult = getDeepest( root->right );
+        RESULT result = lResult.level < rResult.level ? rResult : lResult;
+        ++ result.level;
+        if( result.node == NULL )
+            result.node = root;
+        return result;
+    }
+};
 

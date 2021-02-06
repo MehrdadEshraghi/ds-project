@@ -19,6 +19,7 @@ int main()
     Map m(arr, numberOfCastles);
     cout << "Enter The Output Capacity Of Castles Your Lordship:" << endl;
     cin >> outputCapacityOfCastles;
+    m.setOutputCapacityOfCastles(outputCapacityOfCastles);
     Castle::setOutputCapacityOfCastles(outputCapacityOfCastles);
     cout << "Enter The Speed Of Soldiers My Lord:" << endl;
     cin >> soldiersSpeed;
@@ -30,9 +31,8 @@ int main()
         cout << "Enter The Number Of Soldiers For Castle " << i << " My Lord:" << endl;
         cin >> numberOfSoldiers;
         cout << "Enter The Strength Of Each Soldier: " << endl;
-        for(int j = 0; j < numberOfSoldiers; j++) {
+        for(int j = 0; j < numberOfSoldiers; j++)
             cin >> soldiers[j];
-        }
         m.setSoldiers(soldiers, numberOfSoldiers, i);
     }
 

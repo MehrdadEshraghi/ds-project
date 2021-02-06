@@ -83,8 +83,10 @@ public:
     }
 
     void print() {
-        for(int i = 0; i <= top; i++)
-            cout << stack[i] << " ";
+        for(int i = 0; i <= top; i++) {
+            cout << "| " << stack[i] << " |";
+            cout << endl;
+        }
         cout << endl;
     }
 
@@ -100,7 +102,7 @@ public:
         this->recoveredSoldiers += soldiersRecovery;
         if(this->stackID != _castleOwner)
             this->recoveredSoldiers = 0;
-        else if(recoveredSoldiers == ceilf(recoveredSoldiers) && recoveredSoldiers == floorf(recoveredSoldiers)) {
+        else if(recoveredSoldiers == ceilf(recoveredSoldiers) && recoveredSoldiers == floorf(recoveredSoldiers) && recoveredSoldiers != 0) {
             this->recoveredSoldiers = 0;
             return this->pop();
         }

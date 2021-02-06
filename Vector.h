@@ -9,7 +9,7 @@ class Vector {
     int counter;
 public:
     Vector() {
-        arr = new T[5];
+        arr = new T[400];
         counter = 0;
     }
 
@@ -38,9 +38,9 @@ public:
     }
 
     void push_back(T data) {
-        T* p = arr;
-        arr = new T[counter + 2];
-        copyArray(arr, p, counter);
+//        T* p = arr;
+//        arr = new T[counter + 2];
+//        copyArray(arr, p, counter);
         *(arr + counter) = data;
         counter++;
     }
@@ -74,7 +74,8 @@ public:
         arr[index] = data;
     }
 
-    void pop() {
+    T pop() {
+        T temp = arr[counter - 1];
         T* p = arr;
         arr = new T[counter + 1];
         copyArray(arr, p, counter);
@@ -82,6 +83,11 @@ public:
         counter -= 1;
          for (int i = counter; i < index; i++)
             arr[i] = arr[i + 1];
+        return temp;
+    }
+
+    T getLastElement() const {
+        return this->arr[counter - 1];
     }
 
     void Delete(int index) {
@@ -115,7 +121,7 @@ public:
 
     void clear() {
         counter = 0;
-        delete arr;
+//        delete arr;
         arr = new T[5];
     }
 
@@ -126,7 +132,7 @@ public:
     void copyArray(T* _arr, T* _p, int _counter) {
         for(int i = 0; i < counter; i++)
             *(_arr + i) = *(_p + i);
-        delete _p;
+//        delete _p;
     }
 };
 

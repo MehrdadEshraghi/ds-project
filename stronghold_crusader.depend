@@ -1,37 +1,78 @@
 # depslib dependency file v1.0
-1612218318 source:d:\project\data structure\stronghold_crusader\main.cpp
+1612303775 source:d:\project\data structure\stronghold_crusader\main.cpp
 	<iostream>
 	"Map.h"
 	"Soldier.h"
 	"Castle.h"
 	"Stack.h"
 
-1612223365 d:\project\data structure\stronghold_crusader\map.h
+1612304527 d:\project\data structure\stronghold_crusader\map.h
 	"Castle.h"
 	"Vector.h"
+	"Queue.h"
 
-1612223365 d:\project\data structure\stronghold_crusader\castle.h
+1612301967 d:\project\data structure\stronghold_crusader\castle.h
+	<cmath>
 	"Stack.h"
 	"AVLTree.h"
 	"Queue.h"
 	"Soldier.h"
-	<cmath>
+	"Vector"
 
-1611410637 d:\project\data structure\stronghold_crusader\vector.h
+1612304269 d:\project\data structure\stronghold_crusader\vector.h
 	<iostream>
 
-1612222876 d:\project\data structure\stronghold_crusader\stack.h
+1612287478 d:\project\data structure\stronghold_crusader\stack.h
 	<iostream>
 	<cmath>
 
-1612118139 d:\project\data structure\stronghold_crusader\queue.h
+1612298026 d:\project\data structure\stronghold_crusader\queue.h
 
-1612202579 d:\project\data structure\stronghold_crusader\avltree.h
+1612297953 d:\project\data structure\stronghold_crusader\avltree.h
 	<iostream>
 	<algorithm>
 	"Soldier.h"
+	"Vector.h"
 
 1612118139 d:\project\data structure\stronghold_crusader\soldier.h
 
 1612179445 d:\project\data structure\stronghold_crusader\fibonacciheap.h
+
+1612331457 source:d:\project\datastructure\stronghold_crusader\main.cpp
+	<iostream>
+	"Map.h"
+	"Soldier.h"
+	"Castle.h"
+	"Stack.h"
+
+1612319524 d:\project\datastructure\stronghold_crusader\map.h
+	"Castle.h"
+	"Vector.h"
+	"Queue.h"
+
+1612318679 d:\project\datastructure\stronghold_crusader\castle.h
+	<cmath>
+	"Stack.h"
+	"AVLTree.h"
+	"Queue.h"
+	"Soldier.h"
+	"Vector.h"
+	<vector>
+
+1612318752 d:\project\datastructure\stronghold_crusader\stack.h
+	<iostream>
+	<cmath>
+
+1612319430 d:\project\datastructure\stronghold_crusader\avltree.h
+	<iostream>
+	<algorithm>
+	"Soldier.h"
+	"Vector.h"
+
+1612314192 d:\project\datastructure\stronghold_crusader\soldier.h
+
+1612307073 d:\project\datastructure\stronghold_crusader\vector.h
+	<iostream>
+
+1612307745 d:\project\datastructure\stronghold_crusader\queue.h
 
